@@ -2,12 +2,12 @@
 // [dependencies]
 // clap = "2"
 
-use std::{io, process::exit};
+use std::io;
+use terminal::{Action, Clear};
 
-use clap::{App, Arg};
 
 fn main() {
-    pulisci_schermo(None);
+    pulisci_schermo();
     loop {
         //chiamo e stampa il menu
         menu();
@@ -16,35 +16,30 @@ fn main() {
         io::stdin()
             .read_line(&mut scelta)
             .expect("Failed to read input");
-        pulisci_schermo(Some(&scelta));
+        pulisci_schermo();
 
+        let trimmed = scelta.trim();
         // todo esegui comando
-        let scelta = ElencoScelte::from(&scelta);
+        let scelta = match trimmed.parse::<i32>() {
+            Ok(i) if (i == 1 || i == 2) => ElencoScelte::from(i),
+            Ok(i) if i == 0 => ElencoScelte::from(i),
+            Ok(_) => ElencoScelte::from(-1),
+            Err(_) => ElencoScelte::from(-1),
+        };
+        
         //println!("{scelta}");
-        esegui_scelta(&scelta);
-    }
-}
-
-fn pulisci_schermo(par_scelta: Option<&str>) {
-    if std::process::Command::new(clear())
-        .status()
-        .unwrap()
-        .success()
-    {
-        match par_scelta {
-            Some(s) => println!("eseguito {s}"),
-            None => println!("scegli l'opzione da eseguire"),
+        if let Some(_)=esegui_scelta(&scelta) {
+            return;
         }
     }
 }
 
-//-> ritorna stringa funzione per windows o linux?
-fn clear() -> String {
-    if cfg!(windows) {
-        "cls".to_string()
-    } else {
-        "clear".to_string()
-    }
+fn pulisci_schermo() {
+    let terminal = terminal::stdout();
+
+    // perform an single action.
+    terminal.act(Action::ClearTerminal(Clear::All)).unwrap();
+    terminal.batch(Action::MoveCursorTo(0, 0)).unwrap();
 }
 
 //scelta a numerico ma per ora è a stringa per 4 opzioni
@@ -56,34 +51,41 @@ enum ElencoScelte {
 }
 //creato i metodi per il match
 impl ElencoScelte {
-    fn from(par_str: &str) -> Self {
+    fn from(par_str: i32) -> Self {
         match par_str {
-            "1\n" => ElencoScelte::EliminaFile,
-            "2\n" => ElencoScelte::EliminaCestino,
-            "E\n" | "0\n" | "e\n" => ElencoScelte::Esci,
+            1 => ElencoScelte::EliminaFile,
+            2 => ElencoScelte::EliminaCestino,
+            0 => ElencoScelte::Esci,
             _ => ElencoScelte::NessunaOperazione,
         }
     }
 }
+//creao la struct per uscire
+struct Uscita;
 // aggiunge il parametro &= per riferimento
-fn esegui_scelta(par_scelta: &ElencoScelte) {
+fn esegui_scelta(par_scelta: &ElencoScelte) -> Option<Uscita>{
     
     //match scelta per 3 opzioni + fuori indice
     match par_scelta {
         ElencoScelte::EliminaFile => {
             println!("Elimino il file");
+            None
         }
         ElencoScelte::EliminaCestino => {
             println!("Elimino il cestino");
+            None
         }
 
         ElencoScelte::Esci => {
             println!("Uscita dalla routine");
-            exit(0);
+            //exit(0);
+            Some(Uscita)
+            
         }
 
         ElencoScelte::NessunaOperazione => {
             println!("Nessuna operazione è impostata per questa scelta");
+            None
         }
     }
 

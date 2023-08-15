@@ -5,5 +5,7 @@ edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
+# dipendenze per il tuo progetto
 [dependencies]
 clap = "2"
+terminal= {version= "0.2", features = ["crossterm-backend"]}
