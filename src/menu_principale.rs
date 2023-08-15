@@ -22,7 +22,7 @@ pub enum ScelteMenuPrincipale { // TODO: cambia nome e varianti
     EliminaCestino,
     SottoMenu,
     #[default]
-    NessunaOperazione, // lasciare questa
+    NessunaOperazione, // lasciare questa qua
 }
 impl Scelte for ScelteMenuPrincipale{} // cambia il nome dopo il for
 
