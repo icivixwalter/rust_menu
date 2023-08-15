@@ -13,8 +13,12 @@ mod traits;
 
 fn main() {
     pulisci_schermo();
-    
-    let menus: Vec<Box<dyn traits::Menu>> = vec![Box::new(MenuPrincipale), Box::new(Sottomenu)];
+    // Tutti i menu
+    let menus: Vec<Box<dyn traits::Menu>> = vec![
+        Box::new(MenuPrincipale), 
+        Box::new(Sottomenu)
+        // TODO: inserire i nuovi menu in ordine qui dentro!!!
+    ];
     let mut menu_corrente = menus.first().unwrap();
     loop {
         //chiamo e stampa il menu
