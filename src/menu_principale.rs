@@ -6,7 +6,7 @@ use strum_macros::EnumIter;
 use strum_macros::EnumString;
 use strum_macros::Display;
 
-// TODO - cambia nome e numero - deve essere un nuovo intero, diverso dai precedenti.
+// TODO - cambia nome e numero - deve essere un nuovo intero, diverso dai precedenti.  @modello@menu_(menu principale da ricopiare)
 pub const MENU_PRINCIPALE: i32 = 0;
 
 // i trait da implementare:
