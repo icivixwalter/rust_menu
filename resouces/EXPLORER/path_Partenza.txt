@@ -1,0 +1,1 @@
+/home/valter/CASA/PROGRAMMI/RUST/RUST_EXPLORER/explorer_rust/resources/path_Partenza.txt

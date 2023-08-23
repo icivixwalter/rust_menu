@@ -1,3 +1,4 @@
+use std::marker::PhantomData;
 use crate::menu_principale::MENU_PRINCIPALE;
 use crate::traits::*;
 // use std::str::FromStr;
@@ -7,7 +8,7 @@ use strum_macros::EnumString;
 use strum_macros::Display;
 
 // deve essere un nuovo intero, diverso dai precedenti.
-pub const SOTTOMENU: i32 = 1;
+pub const SOTTOMENU: Sottomenu<ScelteSottomenu> = Sottomenu{scelte: PhantomData};
 
 // i trait da implementare:
 // Default: rende disponibile il metodo ::default(), che permette di creare una nuova ScelteMenuPrincipale::NessunaOperazione
@@ -18,14 +19,19 @@ pub const SOTTOMENU: i32 = 1;
 #[repr(i32)]
 pub enum ScelteSottomenu {
     Indietro = 0,
-    Opzione1,
+    Opzione1,                       //@qui_(devo @chiamare @explorer @??)
     #[default]
     NessunaOperazione,
 }
-impl Scelte for ScelteSottomenu{}
 
-pub struct Sottomenu;
-impl Menu for Sottomenu {
+
+
+#[derive(Default)]
+pub struct Sottomenu<ScelteSottomenu> {
+    scelte: PhantomData<ScelteSottomenu>,
+}
+
+impl Menu for Sottomenu<ScelteSottomenu> {
     
     fn get_iter(&self) -> Box<dyn Iterator<Item = String>>{
         Box::new(ScelteSottomenu::iter().map(|e| e.to_string()))
@@ -45,7 +51,7 @@ impl Menu for Sottomenu {
         println!("{}", scelta);
         // implementa le azioni di ogni voce di menu. Restituisci Some(Uscita) per terminare il programma, None altrimenti.
         match scelta {
-            ScelteSottomenu::Indietro => Some(Azioni::CambioMenu(MENU_PRINCIPALE)),
+            ScelteSottomenu::Indietro => Some(Azioni::CambioMenu(Box::new(MENU_PRINCIPALE))),
             ScelteSottomenu::Opzione1 => opzione1(),
             ScelteSottomenu::NessunaOperazione => None,
         }

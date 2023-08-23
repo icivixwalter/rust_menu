@@ -2,9 +2,8 @@
 // [dependencies]
 // clap = "2"
 
-use crate::menu_principale::MenuPrincipale;
 use std::io;
-use sottomenu::Sottomenu;
+use menu_principale::MENU_PRINCIPALE;
 use terminal::{Action, Clear};
 use traits::*;
 mod menu_principale;
@@ -14,12 +13,7 @@ mod traits;
 fn main() {
     pulisci_schermo();
     // Tutti i menu
-    let menus: Vec<Box<dyn traits::Menu>> = vec![
-        Box::new(MenuPrincipale), 
-        Box::new(Sottomenu)
-        // TODO: inserire i nuovi menu in ordine qui dentro!!!
-    ];
-    let mut menu_corrente = menus.first().unwrap();
+    let mut menu_corrente: Box<dyn Menu> = Box::new(MENU_PRINCIPALE);
     loop {
         //chiamo e stampa il menu
         menu_corrente.visualizza();
@@ -30,10 +24,12 @@ fn main() {
         
         let Some(azioni) = menu_corrente.scegli(scelta) else { continue };
         
-        menu_corrente = match azioni {
-            Azioni::Uscita => std::process::exit(0),
-            Azioni::CambioMenu(menu) => menus.get(menu as usize).unwrap(),
-        };
+        
+        if let Azioni::CambioMenu(menu) = azioni {
+            menu_corrente = menu;
+        } else {
+            return;   //uscita DAL PROGRAMMA
+        }
     }
 }
 
@@ -51,6 +47,8 @@ fn leggi_input() -> Option<i32> {
     };
 }
 
+
+//@cls_(pulizia schermo)
 fn pulisci_schermo() {
     let terminal = terminal::stdout();
 

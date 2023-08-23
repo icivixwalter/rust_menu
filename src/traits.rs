@@ -1,7 +1,8 @@
 // unit struct che serve solo a definire se uscire o no dal programma.
 pub enum Azioni {
+    //ENUM utilizzata per uscita dall'applicazione oppure per un cambio menu
     Uscita,
-    CambioMenu(i32),
+    CambioMenu(Box<dyn Menu>),
 }
 
 pub trait Scelte {}
