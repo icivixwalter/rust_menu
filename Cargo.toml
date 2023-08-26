@@ -7,6 +7,7 @@ edition = "2021"
 
 # dipendenze per il tuo progetto
 [dependencies]
+opener = "0.6.1"
 # clap = "2"
 # servono per gestire le enum piu' facilmente (es. variante <-> stringa)
 strum = "0.25"

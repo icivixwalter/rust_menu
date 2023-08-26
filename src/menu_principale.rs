@@ -2,11 +2,14 @@ use std::marker::PhantomData;
     
 use crate::sottomenu::*;
 use crate::traits::*;
+use crate::explorer::apri_explorer as apri;
+
 // use std::str::FromStr;
 use strum::IntoEnumIterator;
 use strum_macros::Display;
 use strum_macros::EnumIter;
 use strum_macros::EnumString;
+
 
 // TODO - cambia nome e numero - deve essere un nuovo intero, diverso dai precedenti.  @modello@menu_(menu principale da ricopiare)
 pub const MENU_PRINCIPALE: MenuPrincipale<ScelteMenuPrincipale> = MenuPrincipale{scelte: PhantomData};
@@ -24,6 +27,8 @@ pub enum ScelteMenuPrincipale {
     EliminaFile,            // = 1
     EliminaCestino,         // = 2
     SottoMenu,              // = 3
+    ApriExplorer,           // = 4
+    
     #[default]
     NessunaOperazione, // lasciare questa qua
 }
@@ -69,7 +74,8 @@ impl Menu for MenuPrincipale<ScelteMenuPrincipale> {
             ScelteMenuPrincipale::EliminaFile => elimina_file(),
             ScelteMenuPrincipale::EliminaCestino => elimina_cestino(),
             ScelteMenuPrincipale::SottoMenu => Some(Azioni::CambioMenu(Box::new(SOTTOMENU))),
-             // questo e' un esempio di cambio menu
+            ScelteMenuPrincipale::ApriExplorer => apri_explorer(),
+                  // questo e' un esempio di cambio menu
             ScelteMenuPrincipale::NessunaOperazione => None, // questa lasciala
             ScelteMenuPrincipale::Esci => Some(Azioni::Uscita),
         }
@@ -77,11 +83,16 @@ impl Menu for MenuPrincipale<ScelteMenuPrincipale> {
 }
 
 fn elimina_file() -> Option<Azioni> {
-    // Restituisci None se non vuoi che il programma termini, altrimenti Some(Uscita)
+    // Restituisci None se non vuoi che il programma termini, altrimenti Some(Uscita), idem sotto.
     None
 }
 
 fn elimina_cestino() -> Option<Azioni> {
-    // Restituisci None se non vuoi che il programma termini, altrimenti Some(Uscita)
+    // Restituisci None se non vuoi che il programma termini, altrimenti Some(Uscita) xche manca il ;
     None
+}
+
+fn  apri_explorer()-> Option<Azioni> {
+    apri("..");      // azione apre solo 
+    return None;                //qui restituisco perchè return
 }

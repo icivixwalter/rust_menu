@@ -9,6 +9,7 @@ use traits::*;
 mod menu_principale;
 mod sottomenu;
 mod traits;
+mod explorer;
 
 fn main() {
     pulisci_schermo();
