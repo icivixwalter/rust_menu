@@ -93,6 +93,6 @@ fn elimina_cestino() -> Option<Azioni> {
 }
 
 fn  apri_explorer()-> Option<Azioni> {
-    apri("..");      // azione apre solo 
+    apri("resouces/path_Partenza.txt");      // azione apre solo 
     return None;                //qui restituisco perchè return
 }

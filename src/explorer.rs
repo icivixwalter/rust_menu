@@ -4,17 +4,17 @@
 //  Notare che la funzione std::env::args è annidata in due livelli di moduli
 //   nei casi in cui la funzione desiderata è nidificata in più di un modulo,
 //   è convenzionale portare il modulo padre nell'ambito piuttosto che la funzione. In tal modo, possiamo facilmente utilizzare altre funzioni da std::env .
-   // UNICODE =  std::env::args andrà in panico se un argomento contiene Unicode
-   // UNICODE NON VALIDO = usa invece std::env::args_os . Quella funzione restituisce un iteratore che produce valori OsString invece di valori String
-   //  Abbiamo scelto di utilizzare std::env::args qui per semplicità, perché i valori OsString
-   //  differiscono per piattaforma e sono più complessi con cui lavorare rispetto ai valori String .
+// UNICODE =  std::env::args andrà in panico se un argomento contiene Unicode
+// UNICODE NON VALIDO = usa invece std::env::args_os . Quella funzione restituisce un iteratore che produce valori OsString invece di valori String
+//  Abbiamo scelto di utilizzare std::env::args qui per semplicità, perché i valori OsString
+//  differiscono per piattaforma e sono più complessi con cui lavorare rispetto ai valori String .
 
-    // TRASFORMARE L'ITERATORE IN UN VETTORE
-    // env::args e usiamo immediatamente collect per trasformare
-    // l'iteratore in un vettore contenente tutti i valori prodotti dall'iteratore.
-    // Possiamo usare la funzione collect per creare molti tipi di raccolte,
-    // quindi annotiamo esplicitamente il tipo di args per specificare che vogliamo un vettore di stringhe
-    // NECESSARIO ANNOTARE IL TIPO per facilitare rust a definire la raccolta del vettore.
+// TRASFORMARE L'ITERATORE IN UN VETTORE
+// env::args e usiamo immediatamente collect per trasformare
+// l'iteratore in un vettore contenente tutti i valori prodotti dall'iteratore.
+// Possiamo usare la funzione collect per creare molti tipi di raccolte,
+// quindi annotiamo esplicitamente il tipo di args per specificare che vogliamo un vettore di stringhe
+// NECESSARIO ANNOTARE IL TIPO per facilitare rust a definire la raccolta del vettore.
 
 //use std::process::Command;
 use std::env;
@@ -24,21 +24,17 @@ use std::env;
     .\\resources\\path_Partenza.txt"    @path.relativa   @percorso.relativo   @risorse.txt
     @txt.risorse,   @partenza_(La @path di partenza nel file @esterno)
 */
-                              
+
 // const FILE_PARTENZA: &str = "./resouces/EXPLORER/path_Partenza.txt";
 
-pub fn apri_explorer(input_file: &str ) {
-    
-    //***++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */
-    let path = env::current_dir().unwrap();
-    println!(
-        "Il path corrente {}",
-        path.display()
-    );
+pub fn apri_explorer(input_file: &str) {
+    use std::fs::read_to_string;
 
-    // open a file
-    match opener::open(input_file) {
-        Ok(()) => println!("il file {} è stato trovato ed aperto", input_file),
+    match read_to_string(input_file) {
+        Ok(path_letta) => match opener::open(&path_letta) {
+            Ok(()) => println!("il path {} è stato trovato ed aperto", path_letta),
+            Err(_) => panic!("Il path {} non si trova!!", input_file),
+        },
         Err(_) => panic!("Il file {} non si trova!!", input_file),
-    };
+    }
 }
